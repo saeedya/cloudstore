@@ -44,6 +44,7 @@ jobs:
         echo "export SECRET_KEY=test-key" >> .env.testing
         echo "export LOG_LEVEL=DEBUG" >> .env.testing
         source .env.testing
+        env
     
     - name: Run tests
       run: |
