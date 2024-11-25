@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_jwt_extended import JWTManager # type: ignore
@@ -16,9 +16,13 @@ def create_app(config_name='default'):
     ma.init_app(app)
     jwt.init_app(app)
     
+    # Health check endpoint
     @app.route('/health')
     def health_check():
-        return {'status': 'healthy'}, 200
+        return jsonify({
+            'status': 'healthy',
+            'database': db.engine.url.database
+        })
     
     with app.app_context():
         db.create_all()
