@@ -38,10 +38,11 @@ jobs:
     
     - name: Create .env.testing
       run: |
-        echo "FLASK_ENV=testing" >> .env.testing
-        echo "DATABASE_URL=mysql://root:rootpassword@localhost/cloud_store_test" >> .env.testing
-        echo "SECRET_KEY=test-key" >> .env.testing
-        echo "LOG_LEVEL=DEBUG" >> .env.testing
+        echo "export FLASK_ENV=testing" >> .env.testing
+        echo "export DATABASE_URL=mysql://root:rootpassword@localhost/cloud_store_test" >> .env.testing
+        echo "export SECRET_KEY=test-key" >> .env.testing
+        echo "export LOG_LEVEL=DEBUG" >> .env.testing
+        source .env.testing
     
     - name: Run tests
       run: |
