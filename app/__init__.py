@@ -16,6 +16,10 @@ def create_app(config_name='default'):
     ma.init_app(app)
     jwt.init_app(app)
     
+    @app.route('/health')
+    def health_check():
+        return {'status': 'healthy'}, 200
+    
     with app.app_context():
         db.create_all()
     
