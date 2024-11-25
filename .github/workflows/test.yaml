@@ -13,6 +13,7 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
+          MYSQL_ROOT_USER: root
           MYSQL_ROOT_PASSWORD: rootpassword
           MYSQL_DATABASE: cloud_store_test
         ports:
