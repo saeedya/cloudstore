@@ -48,7 +48,79 @@ class RegisterSchema(Schema):
         if data.get('password') and data.get('confirm_password'):
             if data['password'] != data['confirm_password']:
                 raise ValidationError('Passwords must match', 'confirm_password')
+            
+class PasswordResetRequestSchema(Schema):
+    """Schema for password reset request"""
+    email = fields.Email(required=True)
+            
+class PasswordResetSchema(Schema):
+    """Schema for password reset"""
+    token = fields.String(required=True)
+    new_password = fields.String(required=True)
+    confirm_password = fields.String(required=True)
 
+    @validates('new_password')
+    def validate_password(self, value):
+        errors = []
+        special_chars = "!@#$%^&*(),.?\":{}|<>"
+        
+        if len(value) < 8:
+            errors.append('Password must be at least 8 characters long')
+        
+        if not any(char.isdigit() for char in value):
+            errors.append('Password must contain at least one number')
+        
+        if not any(char.isupper() for char in value):
+            errors.append('Password must contain at least one uppercase letter')
+        
+        if not any(char.islower() for char in value):
+            errors.append('Password must contain at least one lowercase letter')
+        
+        if not any(char in special_chars for char in value):
+            errors.append(f'Password must contain at least one special character ({special_chars})')
+        
+        if errors:
+            raise ValidationError(errors)
+
+    @validates_schema
+    def validate_passwords_match(self, data, **kwargs):
+        if data['new_password'] != data['confirm_password']:
+            raise ValidationError('Passwords must match', 'confirm_password')
+
+class PasswordChangeSchema(Schema):
+    """Schema for password change"""
+    current_password = fields.String(required=True)
+    new_password = fields.String(required=True)
+    confirm_password = fields.String(required=True)
+
+    @validates('new_password')
+    def validate_password(self, value):
+        errors = []
+        special_chars = "!@#$%^&*(),.?\":{}|<>"
+        
+        if len(value) < 8:
+            errors.append('Password must be at least 8 characters long')
+        
+        if not any(char.isdigit() for char in value):
+            errors.append('Password must contain at least one number')
+        
+        if not any(char.isupper() for char in value):
+            errors.append('Password must contain at least one uppercase letter')
+        
+        if not any(char.islower() for char in value):
+            errors.append('Password must contain at least one lowercase letter')
+        
+        if not any(char in special_chars for char in value):
+            errors.append(f'Password must contain at least one special character ({special_chars})')
+        
+        if errors:
+            raise ValidationError(errors)
+        
+    @validates_schema
+    def validate_passwords_match(self, data, **kwargs):
+        if data['new_password'] != data['confirm_password']:
+            raise ValidationError('Passwords must match', 'confirm_password')
+        
 class TokenSchema(Schema):
     """Schema for JWT token response"""
     access_token = fields.String(required=True)
