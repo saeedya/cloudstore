@@ -14,6 +14,6 @@ def client(app):
 def db_session(app):
     with app.app_context():
         db.create_all()
-        yield db
+        yield db.session
         db.session.remove()
         db.drop_all()
