@@ -3,25 +3,24 @@ from marshmallow import ValidationError
 from app.schemas.user import UserSchema
 from app.models.user import User
 
+
 def test_valid_user_serialization():
     """
     GIVEN a User instance
     WHEN serializing with UserSchema
     THEN check the serialization is correct
     """
-    user = User(
-        username="testuser",
-        email="test@test.com"
-    )
+    user = User(username="testuser", email="test@test.com")
     user.set_password("password123")
-    
+
     schema = UserSchema()
     result = schema.dump(user)
-    
-    assert result['username'] == "testuser"
-    assert result['email'] == "test@test.com"
-    assert 'password' not in result  # Password should not be in serialized data
-    assert 'id' in result
+
+    assert result["username"] == "testuser"
+    assert result["email"] == "test@test.com"
+    assert "password" not in result  # Password should not be in serialized data
+    assert "id" in result
+
 
 def test_user_deserialization():
     """
@@ -32,14 +31,15 @@ def test_user_deserialization():
     user_data = {
         "username": "testuser",
         "email": "test@test.com",
-        "password": "Password@123"
+        "password": "Password@123",
     }
-    
+
     schema = UserSchema()
     user = schema.load(user_data)
-    
-    assert user.username == user_data['username']
-    assert user.email == user_data['email']
+
+    assert user.username == user_data["username"]
+    assert user.email == user_data["email"]
+
 
 def test_invalid_username():
     """
@@ -48,14 +48,17 @@ def test_invalid_username():
     THEN check validation error is raised
     """
     schema = UserSchema()
-    
+
     with pytest.raises(ValidationError) as err:
-        schema.load({
-            "username": "ab",  # too short
-            "email": "test@test.com",
-            "password": "password123"
-        })
+        schema.load(
+            {
+                "username": "ab",  # too short
+                "email": "test@test.com",
+                "password": "password123",
+            }
+        )
     assert "username" in err.value.messages
+
 
 def test_invalid_email():
     """
@@ -64,14 +67,17 @@ def test_invalid_email():
     THEN check validation error is raised
     """
     schema = UserSchema()
-    
+
     with pytest.raises(ValidationError) as err:
-        schema.load({
-            "username": "testuser",
-            "email": "invalid-email",
-            "password": "password123"
-        })
+        schema.load(
+            {
+                "username": "testuser",
+                "email": "invalid-email",
+                "password": "password123",
+            }
+        )
     assert "email" in err.value.messages
+
 
 def test_invalid_password():
     """
@@ -80,11 +86,13 @@ def test_invalid_password():
     THEN check validation error is raised
     """
     schema = UserSchema()
-    
+
     with pytest.raises(ValidationError) as err:
-        schema.load({
-            "username": "testuser",
-            "email": "test@test.com",
-            "password": "short"  # too short
-        })
+        schema.load(
+            {
+                "username": "testuser",
+                "email": "test@test.com",
+                "password": "short",  # too short
+            }
+        )
     assert "password" in err.value.messages
