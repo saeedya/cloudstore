@@ -32,7 +32,7 @@ def test_user_deserialization():
     user_data = {
         "username": "testuser",
         "email": "test@test.com",
-        "password": "password123"
+        "password": "Password123@"
     }
     
     schema = UserSchema()
