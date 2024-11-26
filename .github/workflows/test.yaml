@@ -2,9 +2,9 @@ name: Python Tests
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, staging ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, develop, staging ]
 
 jobs:
   test:
@@ -58,3 +58,13 @@ jobs:
         name: codecov-umbrella
         fail_ci_if_error: true
   
+    - name: Check code style
+      run: |
+        pip install black flake8
+        black . --check
+        flake8 .
+  
+    - name: Security check dependencies
+      run: |
+        pip install safety
+        safety check
