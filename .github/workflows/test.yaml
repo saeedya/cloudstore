@@ -39,20 +39,7 @@ jobs:
 
     - name: Wait for MySQL
       run: |
-<<<<<<< HEAD
-        # echo "FLASK_ENV=testing" >> .env.testing
-        # echo "DATABASE_URL=mysql+pymysql://root:rootpassword@localhost:3306/cloud_store_test" >> .env.testing
-        # echo "SECRET_KEY=test-key" >> .env.testing
-        # echo "LOG_LEVEL=DEBUG" >> .env.testing
-        # env
-        export FLASK_ENV=testing
-        export DATABASE_URL="mysql+pymysql://root:rootpassword@localhost:3306/cloud_store_test"
-        export SECRET_KEY="test-key"
-        export LOG_LEVEL="DEBUG"
-        env
-=======
         timeout 20 bash -c "until mysql -h 127.0.0.1 -u root -prootpassword -e 'SELECT 1'; do sleep 1; done"
->>>>>>> 9a8b952 (a dummy change)
     
     - name: Run tests
       env:
