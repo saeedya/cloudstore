@@ -25,6 +25,7 @@ def create_app(config_name='default'):
         })
     
     with app.app_context():
+        from app.models.user import User
         db.create_all()
     
     return app
