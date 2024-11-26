@@ -1,0 +1,13 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 80%    # coverage target percentage
+        threshold: 1%  # allow coverage to drop by 1% while still passing
+    patch:
+      default:
+        target: 80%    # coverage target percentage for new code
+
+ignore:
+  - "tests/**/*"    # ignore test files
+  - "venv/**/*"     # ignore virtual environment

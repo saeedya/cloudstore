@@ -25,10 +25,10 @@ jobs:
           --health-retries=3
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v2
     
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v2
       with:
         python-version: '3.10'
     
@@ -47,10 +47,14 @@ jobs:
         DATABASE_URL: mysql+pymysql://root:rootpassword@localhost:3306/cloud_store_test
         SECRET_KEY: test-key
       run: |
-        python -m pytest tests/ -v --cov --cov-report=xml
+        python -m pytest -v --cov=app --cov-report=xml tests/
 
-    - name: Upload results to Codecov
-      uses: codecov/codecov-action@v4
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-      if: success()
+        files: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: true
+  
