@@ -47,9 +47,14 @@ jobs:
         DATABASE_URL: mysql+pymysql://root:rootpassword@localhost:3306/cloud_store_test
         SECRET_KEY: test-key
       run: |
-        python -m pytest tests/ -v --cov=app
+        python -m pytest -v --cov=app --cov-report=xml tests/
 
-    - name: Upload coverage reports
+    - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
-      if: success()
-      
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: true
+  
