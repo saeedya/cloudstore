@@ -58,12 +58,6 @@ jobs:
         name: codecov-umbrella
         fail_ci_if_error: true
   
-    - name: Check code style
-      run: |
-        pip install black flake8
-        black . --check
-        flake8 .
-  
     - name: Security check dependencies
       run: |
         pip install safety

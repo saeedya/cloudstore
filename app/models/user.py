@@ -9,15 +9,12 @@ class User(db.Model):
     __tablename__ = "users"
 
     # UUID as String for MySQL compatibility
-    id = db.Column(db.String(32), 
-                   primary_key=True, default=lambda: uuid4().hex)
+    id = db.Column(db.String(32), primary_key=True, default=lambda: uuid4().hex)
     username = db.Column(
-        db.String(80, collation="utf8mb4_unicode_ci"), 
-        unique=True, nullable=False
+        db.String(80, collation="utf8mb4_unicode_ci"), unique=True, nullable=False
     )
     email = db.Column(
-        db.String(120, collation="utf8mb4_unicode_ci"), 
-        unique=True, nullable=False
+        db.String(120, collation="utf8mb4_unicode_ci"), unique=True, nullable=False
     )
     password_hash = db.Column(
         db.String(255, collation="utf8mb4_unicode_ci"), nullable=False
@@ -26,8 +23,7 @@ class User(db.Model):
         db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )
     is_active = db.Column(db.Boolean, default=True)
-    role = db.Column(db.String(20, collation="utf8mb4_unicode_ci"), 
-                     default="user")
+    role = db.Column(db.String(20, collation="utf8mb4_unicode_ci"), default="user")
 
     # Reset password fields
     reset_token = db.Column(db.String(100), unique=True)

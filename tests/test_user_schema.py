@@ -18,7 +18,7 @@ def test_valid_user_serialization():
 
     assert result["username"] == "testuser"
     assert result["email"] == "test@test.com"
-    assert "password" not in result 
+    assert "password" not in result
     assert "id" in result
 
 

@@ -32,8 +32,7 @@ class TestAuthController:
         assert user is not None
         assert user.email == "test@test.com"
 
-    def test_duplicate_username_registration(self, auth_controller, 
-                                             db_session):
+    def test_duplicate_username_registration(self, auth_controller, db_session):
         """Test registration with existing username"""
         # Create existing user
         user = User(username="testuser", email="existing@test.com")
@@ -92,8 +91,7 @@ class TestAuthController:
     def test_inactive_user_login(self, auth_controller, db_session):
         """Test login with inactive user"""
         # Create inactive user
-        user = User(username="testuser", email="test@test.com", 
-                    is_active=False)
+        user = User(username="testuser", email="test@test.com", is_active=False)
         user.set_password("TestPass123@")
         db_session.add(user)
         db_session.commit()
@@ -113,8 +111,7 @@ class TestAuthController:
         db_session.add(user)
         db_session.commit()
 
-        response, status_code = \
-                    auth_controller.request_password_reset("test@test.com")
+        response, status_code = auth_controller.request_password_reset("test@test.com")
         assert status_code == 200
         assert "message" in response
 
@@ -143,15 +140,16 @@ class TestAuthController:
             # Verify user was created properly
             created_user = User.query.filter_by(username="testuser").first()
             assert created_user is not None, "User was not created"
-            assert created_user.reset_token == "valid-token", \
-                            "Reset token not set"
+            assert created_user.reset_token == "valid-token", "Reset token not set"
             assert (
                 created_user.reset_token_expires is not None
             ), "Reset token expiry not set"
 
             # Log timezone information
-            logging.info(f"Stored token expiry: \
-                          {created_user.reset_token_expires}")
+            logging.info(
+                f"Stored token expiry: \
+                          {created_user.reset_token_expires}"
+            )
             logging.info(
                 f"Token expiry timezone info: \
                     {created_user.reset_token_expires.tzinfo}"
@@ -174,8 +172,7 @@ class TestAuthController:
             assert updated_user.check_password(
                 "NewPass123@"
             ), "Password was not updated"
-            assert updated_user.reset_token is None, \
-                "Reset token was not cleared"
+            assert updated_user.reset_token is None, "Reset token was not cleared"
             assert (
                 updated_user.reset_token_expires is None
             ), "Reset token expiry was not cleared"
@@ -236,11 +233,9 @@ class TestAuthController:
         db_session.add(user)
         db_session.commit()
 
-        update_data = {"username": "newusername", 
-                       "email": "newemail@test.com"}
+        update_data = {"username": "newusername", "email": "newemail@test.com"}
 
-        response, status_code = \
-                    auth_controller.update_profile(user.id, update_data)
+        response, status_code = auth_controller.update_profile(user.id, update_data)
         assert status_code == 200
         assert "message" in response
         assert response["user"]["username"] == "newusername"

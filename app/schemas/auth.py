@@ -1,5 +1,4 @@
-from marshmallow import Schema, fields, validates, ValidationError, \
-                validates_schema
+from marshmallow import Schema, fields, validates, ValidationError, validates_schema
 from app.schemas.user import UserSchema
 
 
@@ -21,9 +20,9 @@ class RegisterSchema(Schema):
     @validates("username")
     def validate_username(self, value):
         if len(value) < 3:
-          raise ValidationError("Username must be at least 3 characters long")
+            raise ValidationError("Username must be at least 3 characters long")
         if len(value) > 80:
-          raise ValidationError("Username must be less than 80 characters")
+            raise ValidationError("Username must be less than 80 characters")
 
     @validates("password")
     def validate_password(self, value):
@@ -31,31 +30,31 @@ class RegisterSchema(Schema):
         special_chars = '!@#$%^&*(),.?":{}|<>'
 
         if len(value) < 8:
-          errors.append("Password must be at least 8 characters long")
+            errors.append("Password must be at least 8 characters long")
 
         if not any(char.isdigit() for char in value):
-          errors.append("Password must contain at least one number")
+            errors.append("Password must contain at least one number")
 
         if not any(char.isupper() for char in value):
-          errors.append("Password must contain at least one uppercase letter")
+            errors.append("Password must contain at least one uppercase letter")
 
         if not any(char.islower() for char in value):
-          errors.append("Password must contain at least one lowercase letter")
+            errors.append("Password must contain at least one lowercase letter")
 
         if not any(char in special_chars for char in value):
-          errors.append(
-            f"Password must contain at \
+            errors.append(
+                f"Password must contain at \
             least one special character ({special_chars})"
-          )
+            )
 
         if errors:
             raise ValidationError(errors)
 
     @validates_schema
     def validate_passwords_match(self, data, **kwargs):
-      if data.get("password") and data.get("confirm_password"):
-        if data["password"] != data["confirm_password"]:
-          raise ValidationError("Passwords must match", "confirm_password")
+        if data.get("password") and data.get("confirm_password"):
+            if data["password"] != data["confirm_password"]:
+                raise ValidationError("Passwords must match", "confirm_password")
 
 
 class PasswordResetRequestSchema(Schema):
@@ -80,19 +79,19 @@ class PasswordResetSchema(Schema):
             errors.append("Password must be at least 8 characters long")
 
         if not any(char.isdigit() for char in value):
-          errors.append("Password must contain at least one number")
+            errors.append("Password must contain at least one number")
 
         if not any(char.isupper() for char in value):
-          errors.append("Password must contain at least one uppercase letter")
+            errors.append("Password must contain at least one uppercase letter")
 
         if not any(char.islower() for char in value):
-          errors.append("Password must contain at least one lowercase letter")
+            errors.append("Password must contain at least one lowercase letter")
 
         if not any(char in special_chars for char in value):
-          errors.append(
-            f"Password must contain at least \
+            errors.append(
+                f"Password must contain at least \
             one special character ({special_chars})"
-          )
+            )
 
         if errors:
             raise ValidationError(errors)
@@ -122,16 +121,16 @@ class PasswordChangeSchema(Schema):
             errors.append("Password must contain at least one number")
 
         if not any(char.isupper() for char in value):
-          errors.append("Password must contain at least one uppercase letter")
+            errors.append("Password must contain at least one uppercase letter")
 
         if not any(char.islower() for char in value):
-          errors.append("Password must contain at least one lowercase letter")
+            errors.append("Password must contain at least one lowercase letter")
 
         if not any(char in special_chars for char in value):
-          errors.append(
-            f"Password must contain at least \
+            errors.append(
+                f"Password must contain at least \
               one special character ({special_chars})"
-          )
+            )
 
         if errors:
             raise ValidationError(errors)
@@ -162,5 +161,4 @@ class AuthErrorSchema(Schema):
     """Schema for authentication error response"""
 
     message = fields.String(required=True)
-    errors = fields.Dict(keys=fields.String(), 
-                         values=fields.List(fields.String()))
+    errors = fields.Dict(keys=fields.String(), values=fields.List(fields.String()))
