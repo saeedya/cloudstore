@@ -69,7 +69,8 @@ class TestRegisterSchema:
                 expected_error in str(msg).lower() for msg in error_messages
             )
             assert error_found, (
-                f"Password '{password}' should have failed with message containing '{expected_error}'. "
+                f"Password '{password}' should have failed with message \
+                containing '{expected_error}'. "
                 f"Got messages: {error_messages}"
             )
 

@@ -21,7 +21,7 @@ def test_create_user(db_session):
     assert saved_user.email == "test@test.com"
     assert saved_user.check_password("testpass123")
     assert not saved_user.check_password("wrongpass")
-    assert saved_user.is_active == True
+    assert saved_user.is_active
 
 
 def test_uuid_uniqueness(db_session):

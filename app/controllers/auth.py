@@ -40,8 +40,8 @@ class AuthController:
                 return (
                     self.error_schema.dump(
                         {
-                            "message": "Registration failed",
-                            "errors": {"username": ["Username already exists"]},
+                          "message": "Registration failed",
+                          "errors": {"username": ["Username already exists"]},
                         }
                     ),
                     400,
@@ -76,7 +76,10 @@ class AuthController:
                 self.success_schema.dump(
                     {
                         "message": "Registration successful",
-                        "token": {"access_token": access_token, "token_type": "bearer"},
+                        "token": {
+                          "access_token": access_token, 
+                          "token_type": "bearer"
+                          },
                         "user": user,
                     }
                 ),
@@ -87,7 +90,8 @@ class AuthController:
             db.session.rollback()
             return (
                 self.error_schema.dump(
-                    {"message": "Registration failed", "errors": {"_error": [str(e)]}}
+                    {"message": "Registration failed", 
+                     "errors": {"_error": [str(e)]}}
                 ),
                 500,
             )
@@ -103,13 +107,13 @@ class AuthController:
             # Verify password
             if not user or not user.check_password(data["password"]):
                 return (
-                    self.error_schema.dump(
-                        {
-                            "message": "Login failed",
-                            "errors": {"_error": ["Invalid username or password"]},
-                        }
-                    ),
-                    401,
+                  self.error_schema.dump(
+                    {
+                      "message": "Login failed",
+                      "errors": {"_error": ["Invalid username or password"]},
+                    }
+                  ),
+                  401,
                 )
 
             # Check if user is active
@@ -131,20 +135,22 @@ class AuthController:
 
             # Return success response
             return (
-                self.success_schema.dump(
-                    {
-                        "message": "Login successful",
-                        "token": {"access_token": access_token, "token_type": "bearer"},
-                        "user": user,
-                    }
-                ),
-                200,
+              self.success_schema.dump(
+                {
+                  "message": "Login successful",
+                  "token": {"access_token": access_token,
+                             "token_type": "bearer"},
+                  "user": user,
+                }
+              ),
+              200,
             )
 
         except Exception as e:
             return (
                 self.error_schema.dump(
-                    {"message": "Login failed", "errors": {"_error": [str(e)]}}
+                    {"message": "Login failed", 
+                     "errors": {"_error": [str(e)]}}
                 ),
                 500,
             )
@@ -156,17 +162,21 @@ class AuthController:
         try:
             user = User.query.filter_by(email=email).first()
             if not user:
-                return (
-                    self.error_schema.dump(
-                        {"message": "If email exists, reset instructions will be sent"}
-                    ),
-                    200,
-                )  # Return 200 to prevent email enumeration
+              return (
+                self.error_schema.dump(
+                  {
+                    "message": "If email exists, \
+                    reset instructions will be sent"
+                  }
+                ),
+                200,
+              )  # Return 200 to prevent email enumeration
 
             # Generate reset token
             reset_token = secrets.token_urlsafe(32)
             user.reset_token = reset_token
-            user.reset_token_expires = datetime.now(timezone.utc) + timedelta(hours=1)
+            user.reset_token_expires = datetime.now(timezone.utc) + \
+                                        timedelta(hours=1)
 
             db.session.commit()
 
@@ -211,7 +221,8 @@ class AuthController:
             logging.debug(f"Current time (UTC): {current_time}")
             logging.debug(f"Token expires at: {user.reset_token_expires}")
             logging.debug(
-                f"Token expires timezone info: {user.reset_token_expires.tzinfo}"
+              f"Token expires timezone info: \
+                {user.reset_token_expires.tzinfo}"
             )
 
             if not user.is_valid_reset_token():
@@ -252,15 +263,16 @@ class AuthController:
         try:
             user = db.session.get(User, user_id)
             if not user:
-                return self.error_schema.dump({"message": "User not found"}), 404
+              return self.error_schema.dump({
+                  "message": "User not found"}), 404
 
             if not user.check_password(current_password):
                 return (
                     self.error_schema.dump(
-                        {
-                            "message": "Current password is incorrect",
-                            "errors": {"current_password": ["Invalid password"]},
-                        }
+                      {
+                        "message": "Current password is incorrect",
+                        "errors": {"current_password": ["Invalid password"]},
+                      }
                     ),
                     400,
                 )
@@ -269,8 +281,10 @@ class AuthController:
             db.session.commit()
 
             return (
-                self.success_schema.dump({"message": "Password successfully changed"}),
-                200,
+              self.success_schema.dump({
+                  "message": "Password successfully changed"
+                  }),
+              200,
             )
 
         except Exception as e:
@@ -290,13 +304,15 @@ class AuthController:
         Verify user's email address
         """
         try:
-            user = User.query.filter_by(email_verification_token=token).first()
+            user = User.query.filter_by(email_verification_token=token). \
+                                      first()
 
             if not user:
-                return (
-                    self.error_schema.dump({"message": "Invalid verification token"}),
-                    400,
-                )
+              return (
+                self.error_schema.dump({
+                    "message": "Invalid verification token"}),
+                400,
+              )
 
             user.email_verified = True
             user.email_verification_token = None
@@ -304,7 +320,8 @@ class AuthController:
             db.session.commit()
 
             return (
-                self.success_schema.dump({"message": "Email successfully verified"}),
+                self.success_schema.dump({
+                    "message": "Email successfully verified"}),
                 200,
             )
 
@@ -327,7 +344,8 @@ class AuthController:
         try:
             user = db.session.get(User, user_id)
             if not user:
-                return self.error_schema.dump({"message": "User not found"}), 404
+              return self.error_schema.dump({
+                  "message": "User not found"}), 404
 
             # Update allowed fields
             for field in ["username", "email"]:

@@ -23,11 +23,10 @@ def create_app(config_name="default"):
     # Health check endpoint
     @app.route("/health")
     def health_check():
-        return jsonify({"status": "healthy", "database": db.engine.url.database})
+        return jsonify({"status": "healthy", 
+                        "database": db.engine.url.database})
 
     with app.app_context():
-        from app.models.user import User
-
         db.create_all()
 
     return app
