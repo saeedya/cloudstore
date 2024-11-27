@@ -238,3 +238,28 @@ class TestAuthController:
         assert 'message' in response
         assert response['user']['username'] == 'newusername'
         assert response['user']['email'] == 'newemail@test.com'
+
+    def test_get_profile(self, auth_controller, db_session):
+        """Test get user profile"""
+        # Create test user
+        user = User(
+            username='testuser',
+            email='test@test.com'
+        )
+        user.set_password('TestPass123@')
+        db_session.add(user)
+        db_session.commit()
+
+        # Get profile
+        response, status_code = auth_controller.get_profile(user.id)
+    
+        assert status_code == 200
+        assert response['username'] == 'testuser'
+        assert response['email'] == 'test@test.com'
+
+    def test_get_profile_not_found(self, auth_controller):
+        """Test get profile with non-existent user"""
+        response, status_code = auth_controller.get_profile('nonexistent-id')
+        
+        assert status_code == 404
+        assert 'User not found' in response['message']

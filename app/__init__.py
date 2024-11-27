@@ -30,5 +30,9 @@ def create_app(config_name='default'):
     with app.app_context():
         from app.models.user import User
         db.create_all()
+
+    # Register blueprints
+    from app.views.auth import auth_bp
+    app.register_blueprint(auth_bp)
     
     return app
