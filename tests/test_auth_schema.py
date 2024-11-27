@@ -1,24 +1,22 @@
 import pytest
 from marshmallow import ValidationError
 from app.schemas.auth import (
-    LoginSchema, 
+    LoginSchema,
     RegisterSchema,
     TokenSchema,
     AuthSuccessSchema,
     PasswordChangeSchema,
     PasswordResetRequestSchema,
     PasswordResetSchema,
-    AuthErrorSchema
+    AuthErrorSchema,
 )
+
 
 class TestLoginSchema:
     def test_valid_login(self):
         """Test valid login data"""
         schema = LoginSchema()
-        data = {
-            'username': 'testuser',
-            'password': 'TestPass123@'
-        }
+        data = {"username": "testuser", "password": "TestPass123@"}
         result = schema.load(data)
         assert result == data
 
@@ -27,18 +25,19 @@ class TestLoginSchema:
         schema = LoginSchema()
         with pytest.raises(ValidationError) as err:
             schema.load({})
-        assert 'username' in err.value.messages
-        assert 'password' in err.value.messages
+        assert "username" in err.value.messages
+        assert "password" in err.value.messages
+
 
 class TestRegisterSchema:
     def test_valid_registration(self):
         """Test valid registration data"""
         schema = RegisterSchema()
         data = {
-            'username': 'testuser',
-            'email': 'test@example.com',
-            'password': 'TestPass123@',
-            'confirm_password': 'TestPass123@'
+            "username": "testuser",
+            "email": "test@example.com",
+            "password": "TestPass123@",
+            "confirm_password": "TestPass123@",
         }
         result = schema.load(data)
         assert result == data
@@ -47,28 +46,31 @@ class TestRegisterSchema:
         """Test password requirements"""
         schema = RegisterSchema()
         test_cases = [
-            ('short1@', 'at least 8 characters'),  # Match exact error message
-            ('nouppercasechar1@', 'uppercase letter'),
-            ('NOLOWERCASECHAR1@', 'lowercase letter'),
-            ('NoSpecialChar123', 'special character'),
-            ('NoNumber@Abcd', 'must contain at least one number')
+            ("short1@", "at least 8 characters"),  # Match exact error message
+            ("nouppercasechar1@", "uppercase letter"),
+            ("NOLOWERCASECHAR1@", "lowercase letter"),
+            ("NoSpecialChar123", "special character"),
+            ("NoNumber@Abcd", "must contain at least one number"),
         ]
 
         for password, expected_error in test_cases:
             data = {
-                'username': 'testuser',
-                'email': 'test@example.com',
-                'password': password,
-                'confirm_password': password
+                "username": "testuser",
+                "email": "test@example.com",
+                "password": password,
+                "confirm_password": password,
             }
             with pytest.raises(ValidationError) as err:
                 schema.load(data)
 
             # Verify the correct error was raised
-            error_messages = err.value.messages.get('password', [])
-            error_found = any(expected_error in str(msg).lower() for msg in error_messages)
+            error_messages = err.value.messages.get("password", [])
+            error_found = any(
+                expected_error in str(msg).lower() for msg in error_messages
+            )
             assert error_found, (
-                f"Password '{password}' should have failed with message containing '{expected_error}'. "
+                f"Password '{password}' should have failed with message \
+                containing '{expected_error}'. "
                 f"Got messages: {error_messages}"
             )
 
@@ -76,58 +78,66 @@ class TestRegisterSchema:
         """Test username validation"""
         schema = RegisterSchema()
         with pytest.raises(ValidationError) as err:
-            schema.load({
-                'username': 'te',
-                'email': 'test@example.com',
-                'password': 'TestPass123@',
-                'confirm_password': 'TestPass123@'
-            })
-        assert 'username' in err.value.messages
+            schema.load(
+                {
+                    "username": "te",
+                    "email": "test@example.com",
+                    "password": "TestPass123@",
+                    "confirm_password": "TestPass123@",
+                }
+            )
+        assert "username" in err.value.messages
 
     def test_invalid_email(self):
         """Test email validation"""
         schema = RegisterSchema()
         with pytest.raises(ValidationError) as err:
-            schema.load({
-                'username': 'testuser',
-                'email': 'invalid-email',
-                'password': 'TestPass123@',
-                'confirm_password': 'TestPass123@'
-            })
-        assert 'email' in err.value.messages
+            schema.load(
+                {
+                    "username": "testuser",
+                    "email": "invalid-email",
+                    "password": "TestPass123@",
+                    "confirm_password": "TestPass123@",
+                }
+            )
+        assert "email" in err.value.messages
 
     def test_password_mismatch(self):
         """Test password confirmation"""
         schema = RegisterSchema()
         with pytest.raises(ValidationError) as err:
-            schema.load({
-                'username': 'testuser',
-                'email': 'test@example.com',
-                'password': 'TestPass123@',
-                'confirm_password': 'DifferentPass123@'
-            })
-        assert 'confirm_password' in err.value.messages
-    
+            schema.load(
+                {
+                    "username": "testuser",
+                    "email": "test@example.com",
+                    "password": "TestPass123@",
+                    "confirm_password": "DifferentPass123@",
+                }
+            )
+        assert "confirm_password" in err.value.messages
+
+
 class TestPasswordResetRequestSchema:
     def test_valid_email(self):
         schema = PasswordResetRequestSchema()
-        data = {'email': 'test@example.com'}
+        data = {"email": "test@example.com"}
         result = schema.load(data)
         assert result == data
 
     def test_invalid_email(self):
         schema = PasswordResetRequestSchema()
         with pytest.raises(ValidationError) as err:
-            schema.load({'email': 'invalid-email'})
-        assert 'email' in err.value.messages
+            schema.load({"email": "invalid-email"})
+        assert "email" in err.value.messages
+
 
 class TestPasswordResetSchema:
     def test_valid_reset(self):
         schema = PasswordResetSchema()
         data = {
-            'token': 'valid-token',
-            'new_password': 'NewPass123@',
-            'confirm_password': 'NewPass123@'
+            "token": "valid-token",
+            "new_password": "NewPass123@",
+            "confirm_password": "NewPass123@",
         }
         result = schema.load(data)
         assert result == data
@@ -135,22 +145,26 @@ class TestPasswordResetSchema:
     def test_password_mismatch(self):
         schema = PasswordResetSchema()
         with pytest.raises(ValidationError) as err:
-            schema.load({
-                'token': 'valid-token',
-                'new_password': 'NewPass123@',
-                'confirm_password': 'DifferentPass123@'
-            })
-        assert 'confirm_password' in err.value.messages
+            schema.load(
+                {
+                    "token": "valid-token",
+                    "new_password": "NewPass123@",
+                    "confirm_password": "DifferentPass123@",
+                }
+            )
+        assert "confirm_password" in err.value.messages
 
     def test_invalid_password(self):
         schema = PasswordResetSchema()
         with pytest.raises(ValidationError) as err:
-            schema.load({
-                'token': 'valid-token',
-                'new_password': 'weak',
-                'confirm_password': 'weak'
-            })
-        assert 'new_password' in err.value.messages
+            schema.load(
+                {
+                    "token": "valid-token",
+                    "new_password": "weak",
+                    "confirm_password": "weak",
+                }
+            )
+        assert "new_password" in err.value.messages
 
 
 class TestResponseSchemas:
@@ -158,9 +172,9 @@ class TestResponseSchemas:
         """Test token response format"""
         schema = TokenSchema()
         data = {
-            'access_token': 'eyJ0eXAi...',
-            'token_type': 'bearer',
-            'expires_in': 3600
+            "access_token": "eyJ0eXAi...",
+            "token_type": "bearer",
+            "expires_in": 3600,
         }
         result = schema.dump(data)
         assert result == data
@@ -169,66 +183,71 @@ class TestResponseSchemas:
         """Test successful authentication response"""
         schema = AuthSuccessSchema()
         data = {
-            'message': 'Login successful',
-            'token': {
-                'access_token': 'eyJ0eXAi...',
-                'token_type': 'bearer',
-                'expires_in': 3600
+            "message": "Login successful",
+            "token": {
+                "access_token": "eyJ0eXAi...",
+                "token_type": "bearer",
+                "expires_in": 3600,
             },
-            'user': {
-                'id': '123',
-                'username': 'testuser',
-                'email': 'test@example.com',
-                'role': 'user'
-            }
+            "user": {
+                "id": "123",
+                "username": "testuser",
+                "email": "test@example.com",
+                "role": "user",
+            },
         }
         result = schema.dump(data)
-        assert 'message' in result
-        assert 'token' in result
-        assert 'user' in result
-        assert 'password' not in result['user']
+        assert "message" in result
+        assert "token" in result
+        assert "user" in result
+        assert "password" not in result["user"]
 
     def test_auth_error_response(self):
         """Test authentication error response"""
         schema = AuthErrorSchema()
         data = {
-            'message': 'Authentication failed',
-            'errors': {
-                'username': ['User not found'],
-                'password': ['Invalid password']
-            }
+            "message": "Authentication failed",
+            "errors": {
+                "username": ["User not found"],
+                "password": ["Invalid password"],
+            },
         }
         result = schema.dump(data)
         assert result == data
+
 
 class TestPasswordChangeSchema:
     def test_valid_change(self):
         """Test valid password change data"""
         schema = PasswordChangeSchema()
         data = {
-            'current_password': 'TestPass123@',
-            'new_password': 'NewPass123@',
-            'confirm_password': 'NewPass123@'
+            "current_password": "TestPass123@",
+            "new_password": "NewPass123@",
+            "confirm_password": "NewPass123@",
         }
         result = schema.load(data)
         assert result == data
-    
+
     def test_password_mismatch(self):
         schema = PasswordChangeSchema()
         with pytest.raises(ValidationError) as err:
-            schema.load({
-                'current_password': 'CurrentPass123@',
-                'new_password': 'NewPass123@',
-                'confirm_password': 'DifferentPass123@'
-            })
-        assert 'confirm_password' in err.value.messages
+            schema.load(
+                {
+                    "current_password": "CurrentPass123@",
+                    "new_password": "NewPass123@",
+                    "confirm_password": "DifferentPass123@",
+                }
+            )
+        assert "confirm_password" in err.value.messages
 
     def test_invalid_new_password(self):
         schema = PasswordChangeSchema()
         with pytest.raises(ValidationError) as err:
-            schema.load({
-                'current_password': 'CurrentPass123@',
-                'new_password': 'weak',
-                'confirm_password': 'weak'
-            })
-        assert 'new_password' in err.value.messages
+            schema.load(
+                {
+                    "current_password": "CurrentPass123@",
+                    "new_password": "weak",
+                    "confirm_password": "weak",
+                }
+            )
+        assert "new_password" in err.value.messages

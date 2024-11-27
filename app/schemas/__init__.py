@@ -7,17 +7,17 @@ from .auth import (
     PasswordChangeSchema,
     TokenSchema,
     AuthSuccessSchema,
-    AuthErrorSchema
+    AuthErrorSchema,
 )
 
 __all__ = [
-    'UserSchema',
-    'LoginSchema',
-    'RegisterSchema',
-    'PasswordResetRequestSchema',
-    'PasswordResetSchema',
-    'PasswordChangeSchema',
-    'TokenSchema',
-    'AuthSuccessSchema',
-    'AuthErrorSchema'
+    "UserSchema",
+    "LoginSchema",
+    "RegisterSchema",
+    "PasswordResetRequestSchema",
+    "PasswordResetSchema",
+    "PasswordChangeSchema",
+    "TokenSchema",
+    "AuthSuccessSchema",
+    "AuthErrorSchema",
 ]

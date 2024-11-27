@@ -1,0 +1,4 @@
+-r base.txt
+gunicorn    # Production-grade WSGI server
+supervisor    # Process management
+redis        # For caching (if needed)

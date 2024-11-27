@@ -263,3 +263,4 @@ class TestAuthController:
         
         assert status_code == 404
         assert 'User not found' in response['message']
+
