@@ -28,4 +28,11 @@ def create_app(config_name="default"):
     with app.app_context():
         db.create_all()
 
+<<<<<<< HEAD
+=======
+    # Register blueprints
+    from app.views.auth import auth_bp
+    app.register_blueprint(auth_bp)
+    
+>>>>>>> develop
     return app

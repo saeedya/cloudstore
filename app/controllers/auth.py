@@ -349,12 +349,7 @@ class AuthController:
 
         except Exception as e:
             db.session.rollback()
-            return (
-                self.error_schema.dump(
-                    {
-                        "message": "Failed to update profile",
-                        "errors": {"_error": [str(e)]},
-                    }
-                ),
-                500,
-            )
+            return self.error_schema.dump({
+                'message': 'Failed to update profile',
+                'errors': {'_error': [str(e)]}
+            }), 500
