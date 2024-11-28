@@ -155,3 +155,5 @@ commands.txt
 # Ignore database files
 *.db
 *.sqlite3
+
+.env.docker

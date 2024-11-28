@@ -20,10 +20,13 @@ class TestingConfig(BaseConfig):
 class ProductionConfig(BaseConfig):
     DEBUG = False
 
+class StagingConfig(BaseConfig):
+    DEBUG = False
 
 config = {
     "development": DevelopmentConfig,
     "testing": TestingConfig,
     "production": ProductionConfig,
+    "staging": StagingConfig,
     "default": DevelopmentConfig,
 }
