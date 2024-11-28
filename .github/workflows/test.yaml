@@ -18,12 +18,15 @@ jobs:
           - branch: main
             environment: production
             secret_prefix: PROD
+            db_name: cloud_store_prod
           - branch: staging
             environment: staging
             secret_prefix: STAGING
+            db_name: cloud_store_staging
           - branch: develop
             environment: development
             secret_prefix: DEV
+            db_name: cloud_store_dev
     
     environment: ${{ matrix.environment }}
     
@@ -32,7 +35,9 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets[format('{0}_MYSQL_ROOT_PASSWORD', matrix.secret_prefix)] }}
-          MYSQL_DATABASE: cloud_store_test
+          MYSQL_DATABASE: ${{ matrix.db_name }}
+          MYSQL_USER: ${{ secrets[format('{0}_MYSQL_USER', matrix.secret_prefix)] }}
+          MYSQL_PASSWORD: ${{ secrets[format('{0}_MYSQL_PASSWORD', matrix.secret_prefix)] }}
         ports:
           - 3306:3306
         options: >-
@@ -56,7 +61,7 @@ jobs:
     
     - name: Wait for MySQL
       run: |
-        timeout 20 bash -c "until mysql -h 127.0.0.1 -u root -p${{ secrets[format('{0}_MYSQL_ROOT_PASSWORD', matrix.secret_prefix)] }} -e 'SELECT 1'; do sleep 1; done"
+        timeout 20 bash -c "until mysql -h 127.0.0.1 -u ${{ secrets[format('{0}_MYSQL_USER', matrix.secret_prefix)] }} -p${{ secrets[format('{0}_MYSQL_PASSWORD', matrix.secret_prefix)] }} -e 'SELECT 1'; do sleep 1; done"
     
     - name: Run tests
       env:
