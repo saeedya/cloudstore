@@ -1,5 +1,4 @@
-# .github/workflows/test.yml
-name: CI/CD Pipeline
+name: Python Tests
 
 on:
   push:
@@ -10,34 +9,12 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
-    # Add environment-specific configuration
-    strategy:
-      matrix:
-        include:
-          - branch: main
-            environment: production
-            secret_prefix: PROD
-            db_name: cloud_store_prod
-          - branch: staging
-            environment: staging
-            secret_prefix: STAGING
-            db_name: cloud_store_staging
-          - branch: develop
-            environment: development
-            secret_prefix: DEV
-            db_name: cloud_store_dev
-    
-    environment: ${{ matrix.environment }}
-    
     services:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets[format('{0}_MYSQL_ROOT_PASSWORD', matrix.secret_prefix)] }}
-          MYSQL_DATABASE: ${{ matrix.db_name }}
-          MYSQL_USER: ${{ secrets[format('{0}_MYSQL_USER', matrix.secret_prefix)] }}
-          MYSQL_PASSWORD: ${{ secrets[format('{0}_MYSQL_PASSWORD', matrix.secret_prefix)] }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: cloud_store_test
         ports:
           - 3306:3306
         options: >-
@@ -47,10 +24,10 @@ jobs:
           --health-retries=3
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
     
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v2
       with:
         python-version: '3.10'
     
@@ -58,27 +35,27 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements/test.txt
-    
+
     - name: Wait for MySQL
       run: |
-        timeout 20 bash -c "until mysql -h 127.0.0.1 -u root -p${{ secrets[format('{0}_MYSQL_ROOT_PASSWORD', matrix.secret_prefix)] }} -e 'SELECT 1'; do sleep 1; done"
+        timeout 20 bash -c "until mysql -h 127.0.0.1 -u root -p${{ secrets.MYSQL_ROOT_PASSWORD }} -e 'SELECT 1'; do sleep 1; done"
     
     - name: Run tests
       env:
-        FLASK_ENV: ${{ matrix.environment }}
-        DATABASE_URL: mysql+pymysql://${{ secrets[format('{0}_MYSQL_USER', matrix.secret_prefix)] }}:${{ secrets[format('{0}_MYSQL_PASSWORD', matrix.secret_prefix)] }}@127.0.0.1/${{ matrix.db_name }}
-        SECRET_KEY: ${{ secrets[format('{0}_SECRET_KEY', matrix.secret_prefix)] }}
-        JWT_SECRET_KEY: ${{ secrets[format('{0}_JWT_SECRET_KEY', matrix.secret_prefix)] }}
+        FLASK_ENV: testing
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
       run: |
         python -m pytest -v --cov=app --cov-report=xml tests/
-    
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage.xml
         flags: unittests
-        name: codecov-${{ matrix.environment }}
+        name: codecov-umbrella
         fail_ci_if_error: true
 
   build-and-push:
