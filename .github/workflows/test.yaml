@@ -66,7 +66,7 @@ jobs:
     - name: Run tests
       env:
         FLASK_ENV: ${{ matrix.environment }}
-        DATABASE_URL: ${{ secrets[format('{0}_DATABASE_URL', matrix.secret_prefix)] }}
+        DATABASE_URL: mysql+pymysql://${{ secrets[format('{0}_MYSQL_USER', matrix.secret_prefix)] }}:${{ secrets[format('{0}_MYSQL_PASSWORD', matrix.secret_prefix)] }}@127.0.0.1/${{ matrix.db_name }}
         SECRET_KEY: ${{ secrets[format('{0}_SECRET_KEY', matrix.secret_prefix)] }}
         JWT_SECRET_KEY: ${{ secrets[format('{0}_JWT_SECRET_KEY', matrix.secret_prefix)] }}
       run: |
