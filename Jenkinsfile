@@ -1,5 +1,8 @@
 pipeline {
-    agent any
+    agent 
+        docker {
+            image 'python:3.10-slim'  // Use a Python Docker image
+        }
 
     environment {
         FLASK_ENV = 'testing'
