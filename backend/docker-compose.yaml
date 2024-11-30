@@ -5,7 +5,7 @@ services:
     container_name: cloud_store_api
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     env_file: 
       - .env.docker
     environment:
@@ -13,8 +13,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
-      - ./logs:/app/logs
+      - .:/opt/cloud_store
     depends_on:
       db:
         condition: service_healthy
