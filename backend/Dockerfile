@@ -19,4 +19,4 @@ RUN pip install -r requirements/dev.txt
 COPY . .
 
 # Run migrations and start app
-CMD ["sh", "-c", "flask db upgrade && flask run -p 8000"]
+CMD ["sh", "-c", "flask db upgrade && gunicorn --bind 0.0.0.0:8000 'run:create_app()'"]
