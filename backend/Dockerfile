@@ -1,8 +1,6 @@
-FROM python:3.10-slim
-
+FROM python:3-slim
 EXPOSE 8000
-
-WORKDIR /opt/app
+WORKDIR /opt/cloud_store
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -14,11 +12,11 @@ RUN apt-get update && apt-get install -y \
 
 # Install Python dependencies
 COPY requirements/base.txt requirements/base.txt
-COPY requirements/staging.txt requirements/staging.txt
-RUN pip install -r requirements/staging.txt
+COPY requirements/dev.txt requirements/dev.txt
+RUN pip install -r requirements/dev.txt
 
 # Copy project files
 COPY . .
 
 # Run migrations and start app
-CMD ["sh", "-c", "flask db upgrade && gunicorn --bind 0.0.0.0:8000 'run:create_app()'"]
+CMD ["sh", "-c", "flask db upgrade && flask run -p 8000"]

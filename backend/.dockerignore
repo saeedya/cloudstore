@@ -1,0 +1,54 @@
+# Version Control
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# Tests and Coverage
+tests/
+.coverage
+.coveragerc
+.pytest_cache/
+coverage.xml
+codecov.yaml
+htmlcov/
+
+# Docker
+docker-compose*.yaml
+.dockerignore
+Dockerfile*
+.docker/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.manifest
+*.spec
+
+# Environment
+.env
+.env.*
+!.env.example
+venv/
+.venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.ropeproject/
+
+# Logs
+*.log
+logs/
+pip-log.txt
+
+# Documentation
+docs/
+*.md

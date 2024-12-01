@@ -5,16 +5,12 @@ services:
     container_name: cloud_store_api
     build:
       context: .
-      dockerfile: Dockerfile
     env_file: 
       - .env.docker
     environment:
       PYTHONUNBUFFERED: 1
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
-      - ./logs:/app/logs
     depends_on:
       db:
         condition: service_healthy
