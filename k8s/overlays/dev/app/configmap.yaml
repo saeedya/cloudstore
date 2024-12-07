@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  database-url: mysql+pymysql://dev_user:dev_pass@mysql.dev.svc.cluster.local/cloud_store
+  flask-env: staging

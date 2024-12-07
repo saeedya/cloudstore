@@ -1,0 +1,37 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: dev
+
+resources:
+- ../../base
+- mysql/secret.yaml
+- app/configmap.yaml
+
+patches:
+- target:
+    kind: Deployment
+    name: cloudstore
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: ghcr.io/saeedya/cloudstore/cloudstore:dev
+- target:
+    kind: ConfigMap
+    name: mysql-config
+  patch: |-
+    - op: replace
+      path: /data/database
+      value: cloud_store
+    - op: replace
+      path: /data/user
+      value: staging_user
+
+commonLabels:
+  environment: dev
+
+replicas:
+- name: cloudstore
+  count: 2
+- name: mysql
+  count: 3

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudstore
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cloudstore
+  template:
+    metadata:
+      labels:
+        app: cloudstore
+    spec:
+      imagePullSecrets:
+        - name:  ghcr-secret
+      containers:
+      - name: api
+        image: ghcr.io/saeedya/cloudstore/cloudstore:dev
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: database-url
+        - name: FLASK_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: flask-env
