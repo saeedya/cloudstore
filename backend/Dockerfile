@@ -1,5 +1,5 @@
 FROM python:3-slim
-EXPOSE 8000
+EXPOSE 5000
 WORKDIR /opt/cloud_store
 
 # Install system dependencies
@@ -19,4 +19,4 @@ RUN pip install -r requirements/dev.txt
 COPY . .
 
 # Run migrations and start app
-CMD ["sh", "-c", "flask db upgrade && flask run -p 8000"]
+CMD ["sh", "-c", "flask db upgrade && flask run -p 5000"]

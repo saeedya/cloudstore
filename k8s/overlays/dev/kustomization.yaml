@@ -25,7 +25,7 @@ patches:
       value: cloud_store
     - op: replace
       path: /data/user
-      value: staging_user
+      value: dev_user
 
 commonLabels:
   environment: dev
