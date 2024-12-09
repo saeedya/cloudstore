@@ -1,0 +1,21 @@
+# argocd/applications/develop.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudstore-develop
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/saeedya/cloudstore.git
+    targetRevision: develop
+    path: k8s/overlays/develop
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: develop
+  syncPolicy:
+    automated:
+      prune: true      # Automatically delete resources that are no longer defined
+      selfHeal: true   # Automatically sync if drift is detected
+    syncOptions:
+      - CreateNamespace=true
