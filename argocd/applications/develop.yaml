@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/saeedya/cloudstore.git
     targetRevision: develop
-    path: k8s/overlays/develop
+    path: k8s/overlays/dev
   destination:
     server: https://kubernetes.default.svc
     namespace: develop
