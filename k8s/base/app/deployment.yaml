@@ -17,6 +17,7 @@ spec:
       containers:
       - name: api
         image: ghcr.io/saeedya/cloudstore/cloudstore:staging
+        imagePullPolicy: Always
         ports:
         - containerPort: 8000
         env:
