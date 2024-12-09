@@ -77,4 +77,4 @@ jobs:
           git config --global user.email "actions@github.com"
           git add kustomization.yaml
           git commit -m "chore: update image tag to dev-${{ github.sha }}"
-          git push
+          git push https://${{ secrets.GHCR_CLOUD_STORE }}@github.com/${{ github.repository }}.git
