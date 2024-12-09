@@ -72,9 +72,10 @@ jobs:
       - name: Update k8s manifest
         run: |
           cd k8s/overlays/develop
-          sed -i "s/newTag: .*/newTag: dev-${{ github.sha }}/" kustomization.yaml
+          short_sha=$(echo ${{ github.sha }} | cut -c1-6)
+          sed -i "s/newTag: .*/newTag: dev-${short_sha}/" kustomization.yaml
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add kustomization.yaml
-          git commit -m "chore: update image tag to dev-${{ github.sha }}"
+          git commit -m "chore: update image tag to dev-${short_sha}"
           git push https://${{ secrets.GHCR_CLOUD_STORE }}@github.com/${{ github.repository }}.git
