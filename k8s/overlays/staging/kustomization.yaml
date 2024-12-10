@@ -29,7 +29,7 @@ patches:
 
 images:
 - name: ghcr.io/saeedya/cloudstore
-  newTag: staging
+  newTag: staging-719914
 
 commonLabels:
   environment: staging
