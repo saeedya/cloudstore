@@ -15,7 +15,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: ghcr.io/saeedya/cloudstore/cloudstore:staging
+      value: ghcr.io/saeedya/cloudstore:staging
 - target:
     kind: ConfigMap
     name: mysql-config
@@ -26,6 +26,10 @@ patches:
     - op: replace
       path: /data/user
       value: staging_user
+
+images:
+- name: ghcr.io/saeedya/cloudstore
+  newTag: staging
 
 commonLabels:
   environment: staging
