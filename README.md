@@ -69,7 +69,7 @@ cloudstore/
 ## Development Workflow
 
 ### Local Development
-# Database
+# Database setup
 ```bash
 docker run -d --name  mysql -e MYSQL_USER=<desired_user> -e MYSQL_ROOT_PASSWORD=<desired_root_password> -e MYSQL_DATABASE=cloud_store -p 3306:3306 mysql:8
 mysql -u root -p
@@ -93,6 +93,26 @@ export SECRET_KEY=<your-secret-key>
 export FLASK_DEBUG=1
 flask run
 ```
+# Kubernetes setup
+```bash
+# Create namespace
+kubectl create namespace dev
+
+kubectl create secret docker-registry ghcr-secret   --docker-server=ghcr.io   --docker-username=saeedya   --docker-password=ghp_5Rgc5x6***************   --namespace=dev
+
+# Apply manifests
+kubectl apply -k k8s/overlays/dev
+```
+
+# ArgoCD Setup
+```bash
+# Install ArgoCD
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+# Access UI
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+```
 
 ### Deployment Process
     1- Changes pushed to develop trigger:
@@ -105,14 +125,24 @@ flask run
         Configuration changes
         Infrastructure state
 
-### Testing
-```
-# Run backend tests
-cd backend && pytest tests/ -v
+### Testing Strategy
 
-# Test Kubernetes configs
-kubectl kustomize k8s/overlays/dev
+Unit Tests
+```bash
+# Run backend tests
+cd backend
+pytest tests/ -v
 ```
+K8s tests
+```bash
+# Validate manifests
+kubectl kustomize k8s/overlays/dev
+
+# Test deployment
+kubectl apply -k k8s/overlays/dev --dry-run=client
+```
+
+### Monitoring and Maintenance
 
 
 
