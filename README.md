@@ -114,26 +114,33 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 kubectl port-forward svc/argocd-server -n argocd 8080:443
 ```
 
-### Deployment Process
-    1- Changes pushed to develop trigger:
-        Unit tests
-        Docker image build (dev-{SHA})
-        Automatic deployment to dev environment
+# CI/CD Pipeline Details
+### GitHub Actions Workflow
 
-    2- ArgoCD manages:
-        Kubernetes deployments
-        Configuration changes
-        Infrastructure state
+    On Push to develop:
 
-### Testing Strategy
+        Run tests
+        Build Docker image
+        Tag image with dev-{SHA}
+        Push to GHCR
+        Update Kubernetes manifests
 
-Unit Tests
+### ArgoCD:
+
+    Detects changes in k8s/overlays/dev
+    Syncs new configuration
+    Updates deployments
+
+
+# Testing Strategy
+
+### Unit Tests
 ```bash
 # Run backend tests
 cd backend
 pytest tests/ -v
 ```
-K8s tests
+### K8s tests
 ```bash
 # Validate manifests
 kubectl kustomize k8s/overlays/dev
