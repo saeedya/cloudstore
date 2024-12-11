@@ -29,7 +29,7 @@ patches:
 
 images:
 - name: ghcr.io/saeedya/cloudstore
-  newTag: dev-cfb259
+  newTag: dev-628907
 
 commonLabels:
   environment: dev
