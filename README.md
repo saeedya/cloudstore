@@ -70,18 +70,26 @@ cloudstore/
 
 ### Local Development
 # Database
-```
-flask db upgrade
-flask db history
+```bash
+docker run -d --name  mysql -e MYSQL_USER=<desired_user> -e MYSQL_ROOT_PASSWORD=<desired_root_password> -e MYSQL_DATABASE=cloud_store -p 3306:3306 mysql:8
+mysql -u root -p
+CREATE USER '<desired_user>'@'localhost' IDENTIFIED BY 'desired_user_password>';
+GRANT ALL PRIVILEGES ON cloud_store.* TO '<desired_user>'@'localhost';
+FLUSH PRIVILEGES;
 ```
 
 # Backend setup
-```
-bash
+```bash
+# Clone repository
+git clone https://github.com/saeedya/cloudstore.git
 cd backend
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements/dev.txt
+export FLASK_ENV=development
+export FLASK_APP=run
+export DATABASE_URL=mysql+pymysql://<desired_user>:<desired_user_password>@localhost:3306/cloud_store
+export SECRET_KEY=<your-secret-key>
 export FLASK_DEBUG=1
 flask run
 ```
