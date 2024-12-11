@@ -108,7 +108,7 @@ flask run
 ### Testing
 ```
 # Run backend tests
-cd backend && pytest
+cd backend && pytest tests/ -v
 
 # Test Kubernetes configs
 kubectl kustomize k8s/overlays/dev
